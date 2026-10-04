@@ -16,14 +16,14 @@ import java.util.List;
 @RequestMapping("/users")
 public interface SwaggerUserProfileController {
 
-    @Operation(summary = "Endpoint to get user profile by account id")
+    @Operation(summary = "Endpoint to get user profile by profile id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Information returned successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @GetMapping("/{accountId}")
-    ResponseEntity<UserProfileResponse> getProfileByAccountId(@PathVariable String accountId);
+    @GetMapping("/{id}")
+    ResponseEntity<UserProfileResponse> getProfileById (@PathVariable String id);
 
     @Operation(summary = "Endpoint to get user profile by other attributes")
     @ApiResponses(value = {

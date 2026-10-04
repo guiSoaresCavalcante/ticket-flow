@@ -7,6 +7,6 @@ import java.util.List;
 public interface IProfileUseCase {
 
     UserProfile register(UserProfile profile);
-    UserProfile getProfileByAccountId(String accountId);
+    UserProfile getProfileByAccountId(String id);
     List<UserProfile> getUserProfiles(String document, String name);
 }

@@ -11,7 +11,6 @@ public record EventRequest(
         LocalDateTime endAt,
         String status,
         UUID venueId,
-        UUID organizerId,
         String imageUrl
 ) {
 }

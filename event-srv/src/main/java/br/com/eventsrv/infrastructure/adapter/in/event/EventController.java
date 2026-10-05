@@ -1,6 +1,8 @@
 package br.com.eventsrv.infrastructure.adapter.in.event;
 
+import br.com.eventsrv.application.domain.auth.entity.AuthenticatedUser;
 import br.com.eventsrv.application.domain.event.entity.Event;
+import br.com.eventsrv.application.domain.event.exceptions.InvalidEventException;
 import br.com.eventsrv.application.port.in.IEventUseCase;
 import br.com.eventsrv.infrastructure.adapter.in.event.dto.EventMapper;
 import br.com.eventsrv.infrastructure.adapter.in.event.dto.EventRequest;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class EventController implements SwaggerEventController {
@@ -23,13 +26,21 @@ public class EventController implements SwaggerEventController {
     }
 
     @Override
-    public ResponseEntity<EventResponse> create(EventRequest request) {
-        Event event = useCase.create(mapper.toDomain(request));
+    public ResponseEntity<EventResponse> create(AuthenticatedUser user, EventRequest request) {
+        Event event = useCase.create(mapper.toDomain(request, organizerId(user)));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(event));
     }
 
     @Override
     public ResponseEntity<List<EventResponse>> findAll() {
         return ResponseEntity.ok(useCase.findAll().stream().map(mapper::toResponse).toList());
+    }
+
+    private UUID organizerId(AuthenticatedUser user) {
+        try {
+            return UUID.fromString(user.profileId());
+        } catch (IllegalArgumentException | NullPointerException ex) {
+            throw new InvalidEventException("token profileId is missing or invalid");
+        }
     }
 }

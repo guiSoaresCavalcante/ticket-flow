@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: notification-srv
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: notification-srv
+
+user-srv:
+  base-url: http://localhost:8080
+
+event-srv:
+  base-url: http://localhost:8083
+
+jwt:
+  secret: VUt/fTSgVhf7hatedaa5Rlxna72rT3NjB2L8dqAOlju1g8Y99nLBqpwITsPYykGz
+
+kafka:
+  topics:
+    event-attendance: event-attendance

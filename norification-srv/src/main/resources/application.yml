@@ -1,3 +1,30 @@
 spring:
   application:
-    name: norification-srv
+    name: ${SPRING_APPLICATION_NAME}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        spring.json.value.default.type: br.com.notificicationsrv.infrastructure.adapter.in.messaging.event.EventAttendanceMessage
+        spring.json.use.type.headers: false
+        spring.json.trusted.packages: br.com.notificicationsrv.infrastructure.adapter.in.messaging.event
+
+user-srv:
+  base-url: ${USER_SRV_BASE_URL}
+
+event-srv:
+  base-url: ${EVENT_SRV_BASE_URL}
+
+jwt:
+  secret: ${JWT_SECRET}
+
+kafka:
+  topics:
+    event-attendance: ${KAFKA_TOPIC_EVENT_ATTENDANCE}

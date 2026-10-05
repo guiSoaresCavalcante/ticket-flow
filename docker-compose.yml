@@ -57,6 +57,29 @@ services:
       JWT_SECRET: ${JWT_SECRET:-VUt/fTSgVhf7hatedaa5Rlxna72rT3NjB2L8dqAOlju1g8Y99nLBqpwITsPYykGz}
       JWT_EXPIRATION_SECONDS: ${JWT_EXPIRATION_SECONDS:-3600}
 
+  event-srv:
+    build: ./event-srv
+    container_name: event-srv
+    ports:
+      - "${EVENT_SRV_PORT:-8083}:${EVENT_SRV_PORT:-8083}"
+    depends_on:
+      - eureka-srv
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+      SPRING_APPLICATION_NAME: ${EVENT_SRV_APPLICATION_NAME:-event-srv}
+      SERVER_PORT: ${EVENT_SRV_PORT:-8083}
+      DB_URL: ${EVENT_SRV_DB_URL:-jdbc:h2:mem:event-srv;DB_CLOSE_DELAY=-1}
+      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME:-org.h2.Driver}
+      DB_USERNAME: ${DB_USERNAME:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      H2_CONSOLE_ENABLED: ${H2_CONSOLE_ENABLED:-true}
+      H2_CONSOLE_PATH: ${H2_CONSOLE_PATH:-/h2-console}
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO:-update}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-true}
+      JPA_FORMAT_SQL: ${JPA_FORMAT_SQL:-true}
+      EUREKA_SERVICE_URL: ${EUREKA_SERVICE_URL:-http://eureka-srv:8761/eureka/}
+      JWT_SECRET: ${JWT_SECRET:-VUt/fTSgVhf7hatedaa5Rlxna72rT3NjB2L8dqAOlju1g8Y99nLBqpwITsPYykGz}
+
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway

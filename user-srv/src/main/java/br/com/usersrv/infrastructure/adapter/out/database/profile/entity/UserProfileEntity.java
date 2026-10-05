@@ -26,14 +26,23 @@ public class UserProfileEntity {
     @Column(name = "profile_type", nullable = false)
     private String profileType;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     protected UserProfileEntity() {
     }
 
-    public UserProfileEntity(UUID id, String name, String document, String profileType) {
+    public UserProfileEntity(UUID id, String name, String document, String profileType,
+                             String email, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.document = document;
         this.profileType = profileType;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public UUID getId() {
@@ -50,5 +59,13 @@ public class UserProfileEntity {
 
     public String getProfileType() {
         return profileType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }

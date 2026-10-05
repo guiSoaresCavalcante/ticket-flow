@@ -23,7 +23,8 @@ public class UserRegistrationClientAdapter implements IUserRegistrationPort {
     public RegisterProfileOutput register(RegisterProfileInput input) {
         try {
             UserSrvRegistrationResponse response = feignClient.register(
-                    new UserSrvRegistrationRequest(input.name(), input.document(), input.profileType()));
+                    new UserSrvRegistrationRequest(input.name(), input.document(), input.profileType(),
+                                                    input.email(), input.phoneNumber()));
             return new RegisterProfileOutput(response.profileId(), response.name(), response.document(), response.profileType());
         } catch (FeignException ex) {
             int statusCode = ex.status() > 0 ? ex.status() : HttpStatus.INTERNAL_SERVER_ERROR.value();

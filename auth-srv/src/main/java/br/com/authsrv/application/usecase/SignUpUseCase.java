@@ -31,7 +31,8 @@ public class SignUpUseCase implements ISignUpUseCase {
             throw new UserAlreadyExistsException(input.username());
         }
         RegisterProfileOutput profile = registrationPort.register(
-                new RegisterProfileInput(input.name(), input.document(), input.profileType()));
+                new RegisterProfileInput(input.name(), input.document(), input.profileType(),
+                                        input.email(), input.phoneNumber()));
         UserAccount account = new UserAccount(null, input.username(), passwordEncoder.encode(input.password()),
                 profile.profileId(), profile.name(), profile.document(), profile.profileType());
         UserAccount saved = repository.save(account);

@@ -134,3 +134,23 @@ services:
       SPRING_APPLICATION_NAME: ${API_GATEWAY_APPLICATION_NAME:-api-gateway}
       SERVER_PORT: ${API_GATEWAY_PORT:-8082}
       EUREKA_SERVICE_URL: ${EUREKA_SERVICE_URL:-http://eureka-srv:8761/eureka/}
+
+  notification-srv:
+    build: ./norification-srv
+    container_name: notification-srv
+    depends_on:
+      kafka:
+        condition: service_healthy
+      user-srv:
+        condition: service_started
+      event-srv:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+      SPRING_APPLICATION_NAME: ${NOTIFICATION_SRV_APPLICATION_NAME:-notification-srv}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+      KAFKA_CONSUMER_GROUP_ID: ${NOTIFICATION_SRV_KAFKA_GROUP_ID:-notification-srv}
+      KAFKA_TOPIC_EVENT_ATTENDANCE: ${KAFKA_TOPIC_EVENT_ATTENDANCE:-event-attendance}
+      USER_SRV_BASE_URL: ${USER_SRV_BASE_URL:-http://user-srv:8080}
+      EVENT_SRV_BASE_URL: ${EVENT_SRV_BASE_URL:-http://event-srv:8083}
+      JWT_SECRET: ${JWT_SECRET:-VUt/fTSgVhf7hatedaa5Rlxna72rT3NjB2L8dqAOlju1g8Y99nLBqpwITsPYykGz}

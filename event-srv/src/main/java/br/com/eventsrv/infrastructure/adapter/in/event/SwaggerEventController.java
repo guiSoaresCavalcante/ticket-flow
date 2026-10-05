@@ -13,15 +13,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "EVENT", description = "Endpoints for events")
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("/event")
+@RequestMapping("/events")
 public interface SwaggerEventController {
 
     @Operation(summary = "Endpoint to create an event")
@@ -44,4 +46,14 @@ public interface SwaggerEventController {
     })
     @GetMapping
     ResponseEntity<List<EventResponse>> findAll();
+
+    @Operation(summary = "Endpoint to find an event by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Information returned successfully"),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid token", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("/{eventId}")
+    ResponseEntity<EventResponse> findById(@PathVariable UUID eventId);
 }

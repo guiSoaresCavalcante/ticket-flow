@@ -15,7 +15,7 @@ spring:
             - id: event-srv
               uri: lb://event-srv
               predicates:
-                - Path=/event,/event/**,/event-venue,/event-venue/**
+                - Path=/events,/events/**,/event-venue,/event-venue/**
 
 server:
   port: ${SERVER_PORT}

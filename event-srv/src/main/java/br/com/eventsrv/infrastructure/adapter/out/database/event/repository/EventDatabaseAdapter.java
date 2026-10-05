@@ -6,6 +6,8 @@ import br.com.eventsrv.infrastructure.adapter.out.database.event.mapper.EventEnt
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class EventDatabaseAdapter implements IEventRepository {
@@ -26,5 +28,10 @@ public class EventDatabaseAdapter implements IEventRepository {
     @Override
     public List<Event> findAll() {
         return jpaRepository.findAll().stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public Optional<Event> findById(UUID id) {
+        return jpaRepository.findById(id).map(mapper::toDomain);
     }
 }

@@ -23,13 +23,30 @@ public class UserAccountEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Column(name = "profile_id", nullable = false)
+    private String profileId;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "document", nullable = false)
+    private String document;
+
+    @Column(name = "profile_type", nullable = false)
+    private String profileType;
+
     protected UserAccountEntity() {
     }
 
-    public UserAccountEntity(UUID id, String username, String passwordHash) {
+    public UserAccountEntity(UUID id, String username, String passwordHash, String profileId,
+                             String name, String document, String profileType) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
+        this.profileId = profileId;
+        this.name = name;
+        this.document = document;
+        this.profileType = profileType;
     }
 
     public UUID getId() {
@@ -42,5 +59,21 @@ public class UserAccountEntity {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    public String getProfileId() {
+        return profileId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public String getProfileType() {
+        return profileType;
     }
 }

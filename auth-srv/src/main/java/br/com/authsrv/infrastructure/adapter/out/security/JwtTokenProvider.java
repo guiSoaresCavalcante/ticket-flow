@@ -29,7 +29,12 @@ public class JwtTokenProvider implements ITokenProvider {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(account.accountId())
+                .claim("accountId", account.accountId())
                 .claim("username", account.username())
+                .claim("profileId", account.profileId())
+                .claim("name", account.name())
+                .claim("document", account.document())
+                .claim("profileType", account.profileType())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusSeconds(expirationSeconds)))
                 .signWith(key)

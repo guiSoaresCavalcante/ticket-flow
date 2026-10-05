@@ -34,4 +34,9 @@ public class EventDatabaseAdapter implements IEventRepository {
     public Optional<Event> findById(UUID id) {
         return jpaRepository.findById(id).map(mapper::toDomain);
     }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return jpaRepository.existsById(id);
+    }
 }

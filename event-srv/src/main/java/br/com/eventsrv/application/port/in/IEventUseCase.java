@@ -10,4 +10,5 @@ public interface IEventUseCase {
     Event create(Event event);
     List<Event> findAll();
     Event findById(UUID id);
+    void attend(UUID eventId, UUID profileId);
 }

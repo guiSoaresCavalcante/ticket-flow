@@ -11,4 +11,5 @@ public interface IEventRepository {
     Event save(Event event);
     List<Event> findAll();
     Optional<Event> findById(UUID id);
+    boolean existsById(UUID id);
 }

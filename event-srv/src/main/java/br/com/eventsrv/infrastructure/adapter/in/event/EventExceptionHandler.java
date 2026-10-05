@@ -1,5 +1,6 @@
 package br.com.eventsrv.infrastructure.adapter.in.event;
 
+import br.com.eventsrv.application.domain.event.exceptions.EventAttendancePublishException;
 import br.com.eventsrv.application.domain.event.exceptions.EventNotFoundException;
 import br.com.eventsrv.application.domain.event.exceptions.InvalidEventException;
 import br.com.eventsrv.application.domain.venue.exceptions.VenueNotFoundException;
@@ -19,6 +20,11 @@ public class EventExceptionHandler {
     @ExceptionHandler(EventNotFoundException.class)
     public ResponseEntity<String> handleEventNotFound(EventNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EventAttendancePublishException.class)
+    public ResponseEntity<String> handleAttendancePublish(EventAttendancePublishException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ex.getMessage());
     }
 
     @ExceptionHandler(VenueNotFoundException.class)

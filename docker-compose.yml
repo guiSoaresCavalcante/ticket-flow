@@ -1,0 +1,72 @@
+services:
+  eureka-srv:
+    build: ./eureka-srv
+    container_name: eureka-srv
+    ports:
+      - "${EUREKA_SRV_PORT:-8761}:${EUREKA_SRV_PORT:-8761}"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+      SPRING_APPLICATION_NAME: ${EUREKA_SRV_APPLICATION_NAME:-eureka-srv}
+      SERVER_PORT: ${EUREKA_SRV_PORT:-8761}
+      EUREKA_INSTANCE_HOSTNAME: ${EUREKA_INSTANCE_HOSTNAME:-eureka-srv}
+      EUREKA_REGISTER_WITH_EUREKA: ${EUREKA_REGISTER_WITH_EUREKA:-false}
+      EUREKA_FETCH_REGISTRY: ${EUREKA_FETCH_REGISTRY:-false}
+      EUREKA_SERVICE_URL: ${EUREKA_SERVICE_URL:-http://eureka-srv:8761/eureka/}
+
+  user-srv:
+    build: ./user-srv
+    container_name: user-srv
+    ports:
+      - "${USER_SRV_PORT:-8080}:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+      SPRING_APPLICATION_NAME: ${USER_SRV_APPLICATION_NAME:-user-srv}
+      DB_URL: ${USER_SRV_DB_URL:-jdbc:h2:mem:user-srv;DB_CLOSE_DELAY=-1}
+      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME:-org.h2.Driver}
+      DB_USERNAME: ${DB_USERNAME:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      H2_CONSOLE_ENABLED: ${H2_CONSOLE_ENABLED:-true}
+      H2_CONSOLE_PATH: ${H2_CONSOLE_PATH:-/h2-console}
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO:-update}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-true}
+      JPA_FORMAT_SQL: ${JPA_FORMAT_SQL:-true}
+
+  auth-srv:
+    build: ./auth-srv
+    container_name: auth-srv
+    ports:
+      - "${AUTH_SRV_PORT:-8081}:${AUTH_SRV_PORT:-8081}"
+    depends_on:
+      - eureka-srv
+      - user-srv
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+      SPRING_APPLICATION_NAME: ${AUTH_SRV_APPLICATION_NAME:-auth-srv}
+      SERVER_PORT: ${AUTH_SRV_PORT:-8081}
+      DB_URL: ${AUTH_SRV_DB_URL:-jdbc:h2:mem:auth-srv;DB_CLOSE_DELAY=-1}
+      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME:-org.h2.Driver}
+      DB_USERNAME: ${DB_USERNAME:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      H2_CONSOLE_ENABLED: ${H2_CONSOLE_ENABLED:-true}
+      H2_CONSOLE_PATH: ${H2_CONSOLE_PATH:-/h2-console}
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO:-update}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-true}
+      JPA_FORMAT_SQL: ${JPA_FORMAT_SQL:-true}
+      USER_SRV_BASE_URL: ${USER_SRV_BASE_URL:-http://user-srv:8080}
+      EUREKA_SERVICE_URL: ${EUREKA_SERVICE_URL:-http://eureka-srv:8761/eureka/}
+      JWT_SECRET: ${JWT_SECRET:-VUt/fTSgVhf7hatedaa5Rlxna72rT3NjB2L8dqAOlju1g8Y99nLBqpwITsPYykGz}
+      JWT_EXPIRATION_SECONDS: ${JWT_EXPIRATION_SECONDS:-3600}
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "${API_GATEWAY_PORT:-8082}:${API_GATEWAY_PORT:-8082}"
+    depends_on:
+      - eureka-srv
+      - auth-srv
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+      SPRING_APPLICATION_NAME: ${API_GATEWAY_APPLICATION_NAME:-api-gateway}
+      SERVER_PORT: ${API_GATEWAY_PORT:-8082}
+      EUREKA_SERVICE_URL: ${EUREKA_SERVICE_URL:-http://eureka-srv:8761/eureka/}

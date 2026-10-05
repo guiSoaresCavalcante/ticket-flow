@@ -32,7 +32,8 @@ public class SignUpUseCase implements ISignUpUseCase {
         }
         RegisterProfileOutput profile = registrationPort.register(
                 new RegisterProfileInput(input.name(), input.document(), input.profileType()));
-        UserAccount account = new UserAccount(null, input.username(), passwordEncoder.encode(input.password()));
+        UserAccount account = new UserAccount(null, input.username(), passwordEncoder.encode(input.password()),
+                profile.profileId(), profile.name(), profile.document(), profile.profileType());
         UserAccount saved = repository.save(account);
         return new SignUpOutput(saved.accountId(), saved.username(), profile.profileId());
     }

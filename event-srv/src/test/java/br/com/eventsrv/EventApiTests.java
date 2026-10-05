@@ -34,7 +34,7 @@ class EventApiTests {
 		return "Bearer " + Jwts.builder()
 				.subject("account-1")
 				.claim("username", "john")
-				.claim("profileId", "profile-1")
+				.claim("profileId", "11111111-1111-1111-1111-111111111111")
 				.expiration(new Date(System.currentTimeMillis() + ttlMillis))
 				.signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
 				.compact();
@@ -78,13 +78,14 @@ class EventApiTests {
 
 		String eventJson = """
 				{"name":"Show","eventType":"CONCERT","startAt":"2026-12-01T20:00:00","status":"DRAFT",
-				 "organizerId":"11111111-1111-1111-1111-111111111111","venueId":"%s"}
+				 "venueId":"%s"}
 				""".formatted(venueId);
 		mockMvc.perform(post("/event").header(HttpHeaders.AUTHORIZATION, auth)
 						.contentType(MediaType.APPLICATION_JSON).content(eventJson))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNotEmpty())
-				.andExpect(jsonPath("$.venueId").value(venueId));
+				.andExpect(jsonPath("$.venueId").value(venueId))
+				.andExpect(jsonPath("$.organizerId").value("11111111-1111-1111-1111-111111111111"));
 
 		mockMvc.perform(get("/event").header(HttpHeaders.AUTHORIZATION, auth))
 				.andExpect(status().isOk())
@@ -100,7 +101,6 @@ class EventApiTests {
 
 		String unknownVenue = """
 				{"name":"Show","eventType":"CONCERT","startAt":"2026-12-01T20:00:00","status":"DRAFT",
-				 "organizerId":"11111111-1111-1111-1111-111111111111",
 				 "venueId":"22222222-2222-2222-2222-222222222222"}
 				""";
 		mockMvc.perform(post("/event").header(HttpHeaders.AUTHORIZATION, auth)

@@ -3,10 +3,12 @@ package br.com.eventsrv.infrastructure.adapter.in.event.dto;
 import br.com.eventsrv.application.domain.event.entity.Event;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class EventMapper {
 
-    public Event toDomain(EventRequest request) {
+    public Event toDomain(EventRequest request, UUID organizerId) {
         return new Event(
                 null,
                 request.name(),
@@ -16,7 +18,7 @@ public class EventMapper {
                 request.endAt(),
                 request.status(),
                 request.venueId(),
-                request.organizerId(),
+                organizerId,
                 request.imageUrl(),
                 null,
                 null

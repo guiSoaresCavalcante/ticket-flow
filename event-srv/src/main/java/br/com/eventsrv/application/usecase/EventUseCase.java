@@ -1,10 +1,12 @@
 package br.com.eventsrv.application.usecase;
 
 import br.com.eventsrv.application.domain.event.entity.Event;
+import br.com.eventsrv.application.domain.event.entity.EventAttendance;
 import br.com.eventsrv.application.domain.event.exceptions.EventNotFoundException;
 import br.com.eventsrv.application.domain.event.exceptions.InvalidEventException;
 import br.com.eventsrv.application.domain.venue.exceptions.VenueNotFoundException;
 import br.com.eventsrv.application.port.in.IEventUseCase;
+import br.com.eventsrv.application.port.out.IEventAttendancePublisher;
 import br.com.eventsrv.application.port.out.IEventRepository;
 import br.com.eventsrv.application.port.out.IEventVenueRepository;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,13 @@ public class EventUseCase implements IEventUseCase {
 
     private final IEventRepository repository;
     private final IEventVenueRepository venueRepository;
+    private final IEventAttendancePublisher attendancePublisher;
 
-    public EventUseCase(IEventRepository repository, IEventVenueRepository venueRepository) {
+    public EventUseCase(IEventRepository repository, IEventVenueRepository venueRepository,
+                        IEventAttendancePublisher attendancePublisher) {
         this.repository = repository;
         this.venueRepository = venueRepository;
+        this.attendancePublisher = attendancePublisher;
     }
 
     @Override
@@ -56,6 +61,14 @@ public class EventUseCase implements IEventUseCase {
     @Override
     public Event findById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
+    }
+
+    @Override
+    public void attend(UUID eventId, UUID profileId) {
+        if (!repository.existsById(eventId)) {
+            throw new EventNotFoundException(eventId);
+        }
+        attendancePublisher.publish(new EventAttendance(eventId, profileId));
     }
 
     private void validate(Event event) {

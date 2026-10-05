@@ -19,6 +19,15 @@ spring:
     properties:
       hibernate:
         format_sql: ${JPA_FORMAT_SQL}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      acks: all
+      properties:
+        spring.json.add.type.headers: false
+        max.block.ms: 5000
 
 server:
   port: ${SERVER_PORT}
@@ -30,3 +39,7 @@ eureka:
 
 jwt:
   secret: ${JWT_SECRET}
+
+kafka:
+  topics:
+    event-attendance: ${KAFKA_TOPIC_EVENT_ATTENDANCE}

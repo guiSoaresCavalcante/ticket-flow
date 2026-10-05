@@ -56,4 +56,17 @@ public interface SwaggerEventController {
     })
     @GetMapping("/{eventId}")
     ResponseEntity<EventResponse> findById(@PathVariable UUID eventId);
+
+    @Operation(summary = "Endpoint to attend an event")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Attendance request published"),
+            @ApiResponse(responseCode = "400", description = "Invalid token profile", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid token", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content),
+            @ApiResponse(responseCode = "503", description = "Message broker unavailable", content = @Content)
+    })
+    @PostMapping("/{eventId}/attend")
+    ResponseEntity<Void> attend(@PathVariable UUID eventId,
+                                @Parameter(hidden = true) @AuthenticationPrincipal AuthenticatedUser user);
 }

@@ -41,6 +41,12 @@ public class EventController implements SwaggerEventController {
         return ResponseEntity.ok(mapper.toResponse(useCase.findById(eventId)));
     }
 
+    @Override
+    public ResponseEntity<Void> attend(UUID eventId, AuthenticatedUser user) {
+        useCase.attend(eventId, organizerId(user));
+        return ResponseEntity.accepted().build();
+    }
+
     private UUID organizerId(AuthenticatedUser user) {
         try {
             return UUID.fromString(user.profileId());

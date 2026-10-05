@@ -2,6 +2,8 @@ package br.com.eventsrv;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import br.com.eventsrv.application.domain.event.entity.EventAttendance;
+import br.com.eventsrv.application.port.out.IEventAttendancePublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,12 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +32,9 @@ class EventApiTests {
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@MockitoBean
+	private IEventAttendancePublisher attendancePublisher;
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -102,6 +111,34 @@ class EventApiTests {
 		mockMvc.perform(get("/events").header(HttpHeaders.AUTHORIZATION, auth))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)));
+	}
+
+	@Test
+	void attendPublishesEventIdAndProfileIdFromToken() throws Exception {
+		String auth = token(60_000);
+		String eventJson = """
+				{"name":"Show","eventType":"CONCERT","startAt":"2026-12-01T20:00:00","status":"DRAFT"}
+				""";
+		String createdEvent = mockMvc.perform(post("/events").header(HttpHeaders.AUTHORIZATION, auth)
+						.contentType(MediaType.APPLICATION_JSON).content(eventJson))
+				.andExpect(status().isCreated())
+				.andReturn().getResponse().getContentAsString();
+		String eventId = createdEvent.replaceAll(".*?\"id\":\"([^\"]+)\".*", "$1");
+
+		mockMvc.perform(post("/events/" + eventId + "/attend").header(HttpHeaders.AUTHORIZATION, auth))
+				.andExpect(status().isAccepted());
+
+		verify(attendancePublisher).publish(new EventAttendance(
+				UUID.fromString(eventId), UUID.fromString("11111111-1111-1111-1111-111111111111")));
+	}
+
+	@Test
+	void attendRejectsUnknownEventAndMissingToken() throws Exception {
+		String path = "/events/22222222-2222-2222-2222-222222222222/attend";
+		mockMvc.perform(post(path).header(HttpHeaders.AUTHORIZATION, token(60_000)))
+				.andExpect(status().isNotFound());
+		mockMvc.perform(post(path)).andExpect(status().isUnauthorized());
+		verifyNoInteractions(attendancePublisher);
 	}
 
 	@Test

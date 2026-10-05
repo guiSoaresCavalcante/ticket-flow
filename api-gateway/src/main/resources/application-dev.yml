@@ -10,6 +10,10 @@ spring:
               uri: lb://auth-srv
               predicates:
                 - Path=/auth/**
+            - id: event-srv
+              uri: lb://event-srv
+              predicates:
+                - Path=/event,/event/**,/event-venue,/event-venue/**
 
 server:
   port: 8082

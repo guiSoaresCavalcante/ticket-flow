@@ -24,6 +24,11 @@ server:
 user-srv:
   base-url: http://localhost:8080
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
 jwt:
   secret: VUt/fTSgVhf7hatedaa5Rlxna72rT3NjB2L8dqAOlju1g8Y99nLBqpwITsPYykGz
   expiration-seconds: 3600

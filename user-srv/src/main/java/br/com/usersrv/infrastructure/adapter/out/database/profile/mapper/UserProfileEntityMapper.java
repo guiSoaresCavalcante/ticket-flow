@@ -9,7 +9,8 @@ public class UserProfileEntityMapper {
 
     public UserProfileEntity toEntity(UserProfile profile) {
         UUID id = profile.profileId() != null ? UUID.fromString(profile.profileId()) : null;
-        return new UserProfileEntity(id, profile.name(), profile.document(), profile.profileType());
+        return new UserProfileEntity(id, profile.name(), profile.document(), profile.profileType(),
+                profile.email(), profile.phoneNumber());
     }
 
     public UserProfile toDomain(UserProfileEntity entity) {
@@ -17,7 +18,9 @@ public class UserProfileEntityMapper {
                 entity.getId().toString(),
                 entity.getName(),
                 entity.getDocument(),
-                entity.getProfileType()
+                entity.getProfileType(),
+                entity.getEmail(),
+                entity.getPhoneNumber()
         );
     }
 }

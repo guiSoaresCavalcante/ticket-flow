@@ -8,7 +8,15 @@ import org.springframework.stereotype.Component;
 public class SignUpMapper {
 
     public SignUpInput toInput(SignUpRequest request) {
-        return new SignUpInput(request.username(), request.password(), request.name(), request.document(), request.profileType());
+        return new SignUpInput(
+            request.username(),
+            request.password(),
+            request.name(),
+            request.document(),
+            request.profileType(),
+            request.email(),
+            request.phoneNumber()
+        );
     }
 
     public SignUpResponse toResponse(SignUpOutput output) {

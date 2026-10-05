@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 public class ProfileMapper {
 
     public UserProfile toDomain(UserRegistrationRequest request) {
-        return new UserProfile(null, request.name(), request.document(), request.profileType());
+        return new UserProfile(null, request.name(), request.document(), request.profileType(),
+                request.email(), request.phoneNumber());
     }
 
     public UserProfileResponse toResponse(UserProfile profile) {
@@ -15,7 +16,9 @@ public class ProfileMapper {
                 profile.profileId(),
                 profile.name(),
                 profile.document(),
-                profile.profileType()
+                profile.profileType(),
+                profile.email(),
+                profile.phoneNumber()
         );
     }
 }

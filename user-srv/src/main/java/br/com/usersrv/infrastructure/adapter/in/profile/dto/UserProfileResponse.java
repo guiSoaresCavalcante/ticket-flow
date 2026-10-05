@@ -4,6 +4,8 @@ public record UserProfileResponse(
         String profileId,
         String name,
         String document,
-        String profileType
+        String profileType,
+        String email,
+        String phoneNumber
 ) {
 }

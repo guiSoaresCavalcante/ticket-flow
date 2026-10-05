@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: auth-srv
+              uri: lb://auth-srv
+              predicates:
+                - Path=/auth/**
+
+server:
+  port: ${SERVER_PORT}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URL}

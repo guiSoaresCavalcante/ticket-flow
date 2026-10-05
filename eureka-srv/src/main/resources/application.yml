@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+  profiles:
+    active: dev
+
+server:
+  port: ${SERVER_PORT}
+
+eureka:
+  instance:
+    hostname: ${EUREKA_INSTANCE_HOSTNAME}
+  client:
+    register-with-eureka: ${EUREKA_REGISTER_WITH_EUREKA}
+    fetch-registry: ${EUREKA_FETCH_REGISTRY}
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URL}

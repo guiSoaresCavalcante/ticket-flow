@@ -26,6 +26,11 @@ server:
 user-srv:
   base-url: ${USER_SRV_BASE_URL}
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URL}
+
 jwt:
   secret: ${JWT_SECRET}
   expiration-seconds: ${JWT_EXPIRATION_SECONDS}

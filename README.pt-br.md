@@ -375,62 +375,6 @@ O Compose não sobe sem todas as variáveis definidas. Copie o modelo e preencha
 cp .env.example .env
 ```
 
-Exemplo de `.env` funcional para uso local (troque `JWT_SECRET` por um valor seu, com pelo menos 32 caracteres; por exemplo `openssl rand -base64 48`):
-
-```env
-SPRING_PROFILES_ACTIVE=dev
-
-# Eureka
-EUREKA_SRV_PORT=8761
-EUREKA_SRV_APPLICATION_NAME=eureka-srv
-EUREKA_INSTANCE_HOSTNAME=eureka-srv
-EUREKA_REGISTER_WITH_EUREKA=false
-EUREKA_FETCH_REGISTRY=false
-EUREKA_SERVICE_URL=http://eureka-srv:8761/eureka/
-
-# Database / JPA
-DB_DRIVER_CLASS_NAME=org.h2.Driver
-DB_USERNAME=sa
-DB_PASSWORD=
-H2_CONSOLE_ENABLED=true
-H2_CONSOLE_PATH=/h2-console
-JPA_DDL_AUTO=update
-JPA_SHOW_SQL=false
-JPA_FORMAT_SQL=false
-
-# user-srv
-USER_SRV_APPLICATION_NAME=user-srv
-USER_SRV_DB_URL=jdbc:h2:mem:user-srv;DB_CLOSE_DELAY=-1
-USER_SRV_BASE_URL=http://user-srv:8080
-
-# auth-srv
-AUTH_SRV_PORT=8081
-AUTH_SRV_APPLICATION_NAME=auth-srv
-AUTH_SRV_DB_URL=jdbc:h2:mem:auth-srv;DB_CLOSE_DELAY=-1
-JWT_SECRET=<seu-secret>
-JWT_EXPIRATION_SECONDS=3600
-
-# Kafka
-KAFKA_EXTERNAL_PORT=29092
-KAFKA_UI_PORT=8090
-KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-KAFKA_TOPIC_EVENT_ATTENDANCE=event-attendance
-
-# event-srv
-EVENT_SRV_PORT=8083
-EVENT_SRV_APPLICATION_NAME=event-srv
-EVENT_SRV_DB_URL=jdbc:h2:mem:event-srv;DB_CLOSE_DELAY=-1
-EVENT_SRV_BASE_URL=http://event-srv:8083
-
-# api-gateway
-API_GATEWAY_PORT=8080
-API_GATEWAY_APPLICATION_NAME=api-gateway
-
-# notification-srv
-NOTIFICATION_SRV_APPLICATION_NAME=notification-srv
-NOTIFICATION_SRV_KAFKA_GROUP_ID=notification-srv
-```
-
 > O `.env` contém o secret compartilhado. Nunca o versione.
 
 **3. Faça o build e suba tudo**

@@ -47,7 +47,6 @@ public class EventUseCase implements IEventUseCase {
                 event.status(),
                 event.venueId(),
                 event.organizerId(),
-                event.imageUrl(),
                 now,
                 now
         ));

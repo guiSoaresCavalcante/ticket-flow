@@ -13,7 +13,6 @@ public record Event(
         String status,
         UUID venueId,
         UUID organizerId,
-        String imageUrl,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

@@ -19,7 +19,6 @@ public class EventMapper {
                 request.status(),
                 request.venueId(),
                 organizerId,
-                request.imageUrl(),
                 null,
                 null
         );
@@ -36,7 +35,6 @@ public class EventMapper {
                 event.status(),
                 event.venueId(),
                 event.organizerId(),
-                event.imageUrl(),
                 event.createdAt(),
                 event.updatedAt()
         );

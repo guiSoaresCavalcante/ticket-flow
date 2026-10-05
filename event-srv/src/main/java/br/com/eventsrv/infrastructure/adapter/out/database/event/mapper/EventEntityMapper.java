@@ -16,7 +16,6 @@ public class EventEntityMapper {
                 event.status(),
                 event.venueId(),
                 event.organizerId(),
-                event.imageUrl(),
                 event.createdAt(),
                 event.updatedAt()
         );
@@ -33,7 +32,6 @@ public class EventEntityMapper {
                 entity.getStatus(),
                 entity.getVenueId(),
                 entity.getOrganizerId(),
-                entity.getImageUrl(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

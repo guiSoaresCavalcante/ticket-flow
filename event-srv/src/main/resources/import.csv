@@ -1,2 +1,2 @@
-name,description,eventType,startAt,endAt,status,venueId,organizerId,imageUrl
-Show de Rock,Festival de rock,SHOW,2026-12-01T20:00:00,2026-12-02T02:00:00,PUBLISHED,,3f2b8c1e-5d4a-4e6b-9a7c-1b2d3e4f5a6b,
+name,description,eventType,startAt,endAt,status,venueId,organizerId
+Show de Rock,Festival de rock,SHOW,2026-12-01T20:00:00,2026-12-02T02:00:00,PUBLISHED,,3f2b8c1e-5d4a-4e6b-9a7c-1b2d3e4f5a6b

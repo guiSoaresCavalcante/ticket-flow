@@ -42,9 +42,6 @@ public class EventEntity {
     @Column(name = "organizer_id", nullable = false)
     private UUID organizerId;
 
-    @Column(name = "image_url", length = 500)
-    private String imageUrl;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -55,7 +52,7 @@ public class EventEntity {
     }
 
     public EventEntity(UUID id, String name, String description, String eventType, LocalDateTime startAt,
-                       LocalDateTime endAt, String status, UUID venueId, UUID organizerId, String imageUrl,
+                       LocalDateTime endAt, String status, UUID venueId, UUID organizerId,
                        LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
@@ -66,7 +63,6 @@ public class EventEntity {
         this.status = status;
         this.venueId = venueId;
         this.organizerId = organizerId;
-        this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -105,10 +101,6 @@ public class EventEntity {
 
     public UUID getOrganizerId() {
         return organizerId;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 
     public LocalDateTime getCreatedAt() {

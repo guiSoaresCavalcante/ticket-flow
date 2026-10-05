@@ -10,7 +10,6 @@ public record EventRequest(
         LocalDateTime startAt,
         LocalDateTime endAt,
         String status,
-        UUID venueId,
-        String imageUrl
+        UUID venueId
 ) {
 }

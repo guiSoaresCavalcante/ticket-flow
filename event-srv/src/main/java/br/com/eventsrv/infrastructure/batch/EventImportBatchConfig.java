@@ -77,7 +77,6 @@ public class EventImportBatchConfig {
                     fieldSet.readString("status"),
                     blankToNull(fieldSet.readString("venueId")) == null ? null : UUID.fromString(fieldSet.readString("venueId")),
                     UUID.fromString(fieldSet.readString("organizerId")),
-                    blankToNull(fieldSet.readString("imageUrl")),
                     now,
                     now
             );

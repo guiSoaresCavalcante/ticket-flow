@@ -1,6 +1,7 @@
 package br.com.eventsrv.application.usecase;
 
 import br.com.eventsrv.application.domain.event.entity.Event;
+import br.com.eventsrv.application.domain.event.exceptions.EventNotFoundException;
 import br.com.eventsrv.application.domain.event.exceptions.InvalidEventException;
 import br.com.eventsrv.application.domain.venue.exceptions.VenueNotFoundException;
 import br.com.eventsrv.application.port.in.IEventUseCase;
@@ -11,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EventUseCase implements IEventUseCase {
@@ -49,6 +51,11 @@ public class EventUseCase implements IEventUseCase {
     @Override
     public List<Event> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Event findById(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
     }
 
     private void validate(Event event) {

@@ -42,17 +42,19 @@ class EventApiTests {
 
 	@Test
 	void rejectsRequestsWithoutToken() throws Exception {
-		mockMvc.perform(get("/event")).andExpect(status().isUnauthorized());
+		mockMvc.perform(get("/events")).andExpect(status().isUnauthorized());
 		mockMvc.perform(get("/event-venue")).andExpect(status().isUnauthorized());
-		mockMvc.perform(post("/event").contentType(MediaType.APPLICATION_JSON).content("{}"))
+		mockMvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content("{}"))
+				.andExpect(status().isUnauthorized());
+		mockMvc.perform(get("/events/22222222-2222-2222-2222-222222222222"))
 				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	void rejectsInvalidAndExpiredTokens() throws Exception {
-		mockMvc.perform(get("/event").header(HttpHeaders.AUTHORIZATION, "Bearer garbage"))
+		mockMvc.perform(get("/events").header(HttpHeaders.AUTHORIZATION, "Bearer garbage"))
 				.andExpect(status().isUnauthorized());
-		mockMvc.perform(get("/event").header(HttpHeaders.AUTHORIZATION, token(-60_000)))
+		mockMvc.perform(get("/events").header(HttpHeaders.AUTHORIZATION, token(-60_000)))
 				.andExpect(status().isUnauthorized());
 	}
 
@@ -80,14 +82,24 @@ class EventApiTests {
 				{"name":"Show","eventType":"CONCERT","startAt":"2026-12-01T20:00:00","status":"DRAFT",
 				 "venueId":"%s"}
 				""".formatted(venueId);
-		mockMvc.perform(post("/event").header(HttpHeaders.AUTHORIZATION, auth)
+		String createdEvent = mockMvc.perform(post("/events").header(HttpHeaders.AUTHORIZATION, auth)
 						.contentType(MediaType.APPLICATION_JSON).content(eventJson))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNotEmpty())
 				.andExpect(jsonPath("$.venueId").value(venueId))
-				.andExpect(jsonPath("$.organizerId").value("11111111-1111-1111-1111-111111111111"));
+				.andExpect(jsonPath("$.organizerId").value("11111111-1111-1111-1111-111111111111"))
+				.andReturn().getResponse().getContentAsString();
+		String eventId = createdEvent.replaceAll(".*?\"id\":\"([^\"]+)\".*", "$1");
 
-		mockMvc.perform(get("/event").header(HttpHeaders.AUTHORIZATION, auth))
+		mockMvc.perform(get("/events/" + eventId).header(HttpHeaders.AUTHORIZATION, auth))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(eventId))
+				.andExpect(jsonPath("$.name").value("Show"));
+
+		mockMvc.perform(get("/events/22222222-2222-2222-2222-222222222222").header(HttpHeaders.AUTHORIZATION, auth))
+				.andExpect(status().isNotFound());
+
+		mockMvc.perform(get("/events").header(HttpHeaders.AUTHORIZATION, auth))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)));
 	}
@@ -95,7 +107,7 @@ class EventApiTests {
 	@Test
 	void validatesEventInput() throws Exception {
 		String auth = token(60_000);
-		mockMvc.perform(post("/event").header(HttpHeaders.AUTHORIZATION, auth)
+		mockMvc.perform(post("/events").header(HttpHeaders.AUTHORIZATION, auth)
 						.contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"x\"}"))
 				.andExpect(status().isBadRequest());
 
@@ -103,7 +115,7 @@ class EventApiTests {
 				{"name":"Show","eventType":"CONCERT","startAt":"2026-12-01T20:00:00","status":"DRAFT",
 				 "venueId":"22222222-2222-2222-2222-222222222222"}
 				""";
-		mockMvc.perform(post("/event").header(HttpHeaders.AUTHORIZATION, auth)
+		mockMvc.perform(post("/events").header(HttpHeaders.AUTHORIZATION, auth)
 						.contentType(MediaType.APPLICATION_JSON).content(unknownVenue))
 				.andExpect(status().isNotFound());
 	}
